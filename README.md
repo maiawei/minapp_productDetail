@@ -1,0 +1,2 @@
+# minapp_productDetail
+微信小程序仿淘宝商品详情页tab联动页面
