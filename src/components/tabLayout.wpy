@@ -1,0 +1,92 @@
+<style lang="less">
+.swiper-tab {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  .tab-item {
+    flex-grow: 1;
+    white-space: nowrap;
+    height: 80rpx;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .item-index {
+      left: 0rpx;
+      position: absolute;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      bottom: 0rpx;
+      .tab-line {
+        width: 50rpx;
+        height: 5rpx;
+        background: #ddad7d;
+      }
+    }
+    .check-text {
+      margin-left: 24rpx;
+      margin-right: 24rpx;
+      color: #ddad7d;
+      font-size: 28rpx;
+    }
+    .item-text {
+      margin-left: 24rpx;
+      margin-right: 24rpx;
+      color: #041e41;
+      font-size: 28rpx;
+    }
+    .divider {
+      color: #666666;
+      font-size: 24rpx;
+    }
+  }
+}
+.tab-scroll {
+  width: 750rpx;
+  height: 80rpx;
+}
+</style>
+
+<template lang="wxml" minapp="wepy">
+  <scroll-view scroll-x class="tab-scroll">
+    <view class="swiper-tab">
+      <block v-for="(item, index) in tabList" wx:key="" wx:for-index="index">
+        <view @tap="swichTab(index)" class="tab-item">
+          <text class="{{currentIndex===index ? 'check-text':'item-text'}}">{{item.title?item.title:item}}</text>
+          <view wx:if="{{currentIndex===index}}" class="item-index">
+            <view class="tab-line"></view>
+          </view>
+          <text wx:if="{{showDivider}}" class="divider">|</text>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+</template>
+<script>
+import wepy from '@wepy/core'
+wepy.component({
+  props: {
+    currentIndex: Number,
+    tabList: {
+      type: Array,
+      default: []
+    },
+    showDivider: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    swichTab(index) {
+      if (this.currentIndex === index) {
+        return false
+      }
+      this.currentIndex = index
+      this.$emit('index-emit', this.currentIndex)
+    }
+  },
+  onLoad() {
+  }
+})
+</script>

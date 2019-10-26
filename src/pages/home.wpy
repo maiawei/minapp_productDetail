@@ -1,0 +1,138 @@
+<style lang="less">
+.sv {
+  height: 100vh;
+  .text {
+    font-size: 22rpx;
+    color: coral;
+  }
+}
+.tabView {
+  background: #ffffff;
+  position: fixed;
+  top: 0rpx;
+  z-index: 3;
+  box-shadow: 0 0 10rpx 0 rgba(0, 0, 0, 0.12);
+}
+.p-header {
+  width: 750rpx;
+  height: 600rpx;
+  background: #f3f3f3;
+}
+.p-comment {
+  width: 750rpx;
+  height: 800rpx;
+  background: #999999;
+}
+.p-detail {
+  width: 750rpx;
+  height: 1300rpx;
+  background: #ff2400;
+}
+.p-recommend {
+  width: 750rpx;
+  height: 1600rpx;
+  background: #999999;
+}
+</style>
+
+<template lang="wxml" minapp="wepy">
+  <div class="container">
+    <tabLayout v-if="hasTab" @index-emit.user="currentIndexChanged" class="tabView" v-bind:currentIndex="currentTabIndex" :tabList.sync="tabList">
+    </tabLayout>
+    <scroll-view @scroll="scroll" scroll-with-animation="true" scroll-into-view="{{currentArea}}" class="sv" scroll-y="true">
+      <view id="product" class="p-header">
+        <text>产品头图</text>
+      </view>
+      <view id="comment" class="p-comment">
+        <text>产品评价</text>
+      </view>
+      <view  id="detail" class="p-detail">
+        <text>产品详情</text>
+      </view>
+      <view id="recommend" class="p-recommend">
+        <text>产品推荐</text>
+      </view>
+    </scroll-view>
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+wepy.page({
+  data: {
+    hasTab: false,
+    currentTabIndex: 0,
+    currentArea: '',
+    tabList: [{
+      title: '产品',
+      id: 'product'
+    },
+    {
+      title: '评价',
+      id: 'comment'
+    },
+    {
+      title: '详情',
+      id: 'detail'
+    },
+    {
+      title: '推荐',
+      id: 'recommend'
+    }
+    ]
+  },
+  methods: {
+    currentIndexChanged(index) {
+      this.currentTabIndex = index
+      this.currentArea = this.tabList[index].id
+    },
+    scroll(e) {
+      const that = this
+      var query = wx.createSelectorQuery()
+      let systemInfo = wx.getSystemInfoSync()
+      let tabHeight = 80 / 750 * systemInfo.windowWidth
+      query.select('#comment').boundingClientRect()
+      query.select('#detail').boundingClientRect()
+      query.select('#recommend').boundingClientRect()
+      query.exec(function (res) {
+        if (res[0].top <= tabHeight && res[0].top > (tabHeight - res[0].height)) {
+          that.currentTabIndex = 1
+        }
+        if (res[1].top <= tabHeight && res[1].top > (tabHeight - res[1].height)) {
+          that.currentTabIndex = 2
+        }
+        if (res[2].top <= tabHeight && res[2].top > (tabHeight - res[2].height)) {
+          that.currentTabIndex = 3
+        }
+      })
+    },
+    createAreaObserver() {
+      this.observer = wx.createIntersectionObserver()
+      this.observer
+        .relativeTo('.sv')
+        .observe('.p-header', (res) => {
+          if (res.intersectionRatio <= 0) {
+            this.hasTab = true
+          } else {
+            this.hasTab = false
+          }
+        })
+    }
+  },
+  onLoad() {
+    this.createAreaObserver()
+  },
+  onReady() { },
+  onUnload() {
+    if (this.observer) this.observer.disconnect()
+  }
+})
+</script>
+<config>
+{
+    navigationBarTitleText: '产品详情页',
+    usingComponents: {
+      tabLayout: '../components/tabLayout',
+    }
+}
+</config>

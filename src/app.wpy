@@ -1,0 +1,51 @@
+<style lang="less">
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.cell-col{
+  display: flex;
+  flex-direction: column;
+  align-items: center
+}
+.cell-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center
+}
+</style>
+
+<script>
+import wepy from '@wepy/core'
+import vuex from '@wepy/x'
+wepy.use(vuex)
+wepy.app({
+  globalData: {
+    userInfo: null
+  },
+  onLaunch() {
+
+  },
+  methods: {
+
+  }
+})
+</script>
+
+<config>
+{
+    pages: [
+      'pages/home'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+}
+</config>
